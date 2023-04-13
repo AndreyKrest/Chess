@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using XXL.Chess;
 
 class Program
@@ -7,20 +8,21 @@ class Program
     {
         Game game = new Game();
         List<(int, int)> legalMoves = game.GetLegalMoves((0, 0));
-        game.DrawBoard();
-        game.MakeMove((0, 0), (0, 7));
-        game.DrawBoard();
-        game.MakeMove((1, 0), (2, 2));
-        game.DrawBoard();
-        game.MakeMove((2, 7), (0, 5));
-        game.DrawBoard();
-        game.MakeMove((4, 7), (4, 0));
-        game.DrawBoard();
-        game.MakeMove((5, 0), (0, 5));
-        game.DrawBoard();
-        // foreach ((int, int) i in legalMoves)
-        // {
-        //     Console.WriteLine(i);
-        // }
+        Program.DrawBoard(game);
+        game.MakeMove((0, 1), (0, 2));
+        Program.DrawBoard(game);
+        game.MakeMove((1, 1), (1, 3));
+        Program.DrawBoard(game);
+        game.MakeMove((1, 3), (1, 4));
+        Program.DrawBoard(game);
+
+
+    }
+
+    private static void DrawBoard(Game game)
+    {
+        Console.SetCursorPosition(0, 0);
+        Console.Write(game.DrawBoard());
+        Console.ReadKey();
     }
 }

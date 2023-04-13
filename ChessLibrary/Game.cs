@@ -28,11 +28,9 @@ namespace XXL.Chess
             return Board.GetFigurePositions();
         }
 
-        public void DrawBoard()
+        public string DrawBoard()
         {
-            Console.SetCursorPosition(0, 0);
-            Board.DrawBoard();
-            Console.ReadKey();
+            return Board.DrawBoard();
         }
     }
 }
