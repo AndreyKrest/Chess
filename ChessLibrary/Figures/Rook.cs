@@ -3,33 +3,33 @@ using System.Collections.Generic;
 
 namespace XXL.Chess
 {
-  class Rook : Figure
-  {
-    public Rook(FigureColor color) : base(color, FigureConsoleRepresentation.R)
+    class Rook : Figure
     {
-
-    }
-    public override List<(int, int)> GetLegalMoves(Cell currentCell)
-    {
-      List<(int, int)> legalMoves = new List<(int, int)>();
-      bool collectLegalMoves(Cell nextCell)
-      {
-        if (nextCell.Figure != null)
+        public Rook(FigureColor color) : base(color, FigureConsoleRepresentation.R)
         {
-          if (nextCell.Figure.Color != Color)
-          {
-            legalMoves.Add(nextCell.Coordinates);
-          }
-          return true;
+
         }
-        legalMoves.Add(nextCell.Coordinates);
-        return false;
-      }
-      currentCell.IterateUp(collectLegalMoves);
-      currentCell.IterateDown(collectLegalMoves);
-      currentCell.IterateRight(collectLegalMoves);
-      currentCell.IterateLeft(collectLegalMoves);
-      return legalMoves;
+        public override List<(int, int)> GetLegalMoves(Cell currentCell, int currentMove)
+        {
+            List<(int, int)> legalMoves = new List<(int, int)>();
+            bool collectLegalMoves(Cell nextCell)
+            {
+                if (nextCell.Figure != null)
+                {
+                    if (nextCell.Figure.Color != Color)
+                    {
+                        legalMoves.Add(nextCell.Coordinates);
+                    }
+                    return true;
+                }
+                legalMoves.Add(nextCell.Coordinates);
+                return false;
+            }
+            currentCell.IterateUp(collectLegalMoves);
+            currentCell.IterateDown(collectLegalMoves);
+            currentCell.IterateRight(collectLegalMoves);
+            currentCell.IterateLeft(collectLegalMoves);
+            return legalMoves;
+        }
     }
-  }
 }

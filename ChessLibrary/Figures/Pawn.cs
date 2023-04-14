@@ -9,7 +9,7 @@ namespace XXL.Chess
         {
 
         }
-        public override List<(int, int)> GetLegalMoves(Cell currentCell)
+        public override List<(int, int)> GetLegalMoves(Cell currentCell, int currentMove)
         {
             List<(int, int)> legalMoves = new List<(int, int)>();
             bool collectLegalMoves(Cell nextCell)
@@ -22,20 +22,57 @@ namespace XXL.Chess
                         legalMoves.Add(nextCell.Coordinates);
                         return true;
                     }
-                    if (nextCell.Coordinates.Item2 - currentCell.Coordinates.Item2 < 3)
+                    if (Math.Abs(nextCell.Coordinates.Item2 - currentCell.Coordinates.Item2) < 3)
                     {
                         legalMoves.Add(nextCell.Coordinates);
                         return false;
                     }
-
                 }
-
-
                 return true;
             }
-            currentCell.IterateUp(collectLegalMoves);
+
+            bool collectLegalCaptures(Cell nextCell)
+            {
+                if (nextCell.Figure != null && nextCell.Figure.Color != Color)
+                {
+                    legalMoves.Add(nextCell.Coordinates);
+                }
+                if ((currentCell.Coordinates.Item2 == 3 || currentCell.Coordinates.Item2 == 4))
+                {
+                    (int, int) targetCoords = (nextCell.Coordinates.Item1, currentCell.Coordinates.Item2);
+                    Figure targetFigure = currentCell.GetSiblingCellByGlobalCoordinates(targetCoords).Figure;
+                    if (targetFigure is Pawn && targetFigure.Color != Color && targetFigure.MovesHistory.ContainsKey(currentMove - 1) && targetFigure.MovesHistory.Keys.Count == 1)
+                    {
+                        legalMoves.Add(nextCell.Coordinates);
+                    }
+                }
+                return true;
+            }
+            if (this.Color == FigureColor.White)
+            {
+                currentCell.IterateUp(collectLegalMoves);
+                currentCell.IterateUpRight(collectLegalCaptures);
+                currentCell.IterateUpLeft(collectLegalCaptures);
+            }
+            else
+            {
+                currentCell.IterateDown(collectLegalMoves);
+                currentCell.IterateDownRight(collectLegalCaptures);
+                currentCell.IterateDownLeft(collectLegalCaptures);
+            }
+
 
             return legalMoves;
+        }
+
+        public override void OnBeforeMove(Cell currentCell, Cell nextCell, int currentMove)
+        {
+            base.OnBeforeMove(currentCell, nextCell, currentMove);
+            if (currentCell.Coordinates.Item1 != nextCell.Coordinates.Item1 && nextCell.Figure == null)
+            {
+                (int, int) targetCoords = (nextCell.Coordinates.Item1, currentCell.Coordinates.Item2);
+                nextCell.GetSiblingCellByGlobalCoordinates(targetCoords).Figure = null;
+            }
         }
     }
 }

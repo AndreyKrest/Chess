@@ -7,39 +7,39 @@ namespace XXL.Chess
     class Board
     {
         private static readonly Dictionary<(int, int), Figure> defaultFigures = new Dictionary<(int, int), Figure>() {
-        { (0, 1), new Pawn(FigureColor.White) },
-        { (1, 1), new Pawn(FigureColor.White) },
-        { (2, 1), new Pawn(FigureColor.White) },
-        { (3, 1), new Pawn(FigureColor.White) },
-        { (4, 1), new Pawn(FigureColor.White) },
-        { (5, 1), new Pawn(FigureColor.White) },
-        { (6, 1), new Pawn(FigureColor.White) },
-        { (7, 1), new Pawn(FigureColor.White) },
-        { (0, 6), new Pawn(FigureColor.Black) },
-        { (1, 6), new Pawn(FigureColor.Black) },
-        { (2, 6), new Pawn(FigureColor.Black) },
-        { (3, 6), new Pawn(FigureColor.Black) },
-        { (4, 6), new Pawn(FigureColor.Black) },
-        { (5, 6), new Pawn(FigureColor.Black) },
-        { (6, 6), new Pawn(FigureColor.Black) },
-        { (7, 6), new Pawn(FigureColor.Black) },
+            { (0, 1), new Pawn(FigureColor.White) },
+            { (1, 1), new Pawn(FigureColor.White) },
+            { (2, 1), new Pawn(FigureColor.White) },
+            { (3, 1), new Pawn(FigureColor.White) },
+            { (4, 1), new Pawn(FigureColor.White) },
+            { (5, 1), new Pawn(FigureColor.White) },
+            { (6, 1), new Pawn(FigureColor.White) },
+            { (7, 1), new Pawn(FigureColor.White) },
+            { (0, 6), new Pawn(FigureColor.Black) },
+            { (1, 6), new Pawn(FigureColor.Black) },
+            { (2, 6), new Pawn(FigureColor.Black) },
+            { (3, 6), new Pawn(FigureColor.Black) },
+            { (4, 6), new Pawn(FigureColor.Black) },
+            { (5, 6), new Pawn(FigureColor.Black) },
+            { (6, 6), new Pawn(FigureColor.Black) },
+            { (7, 6), new Pawn(FigureColor.Black) },
 
-
-        { (0, 0), new Rook(FigureColor.White) },
-        { (7, 0), new Rook(FigureColor.White) },
-        { (0, 7), new Rook(FigureColor.Black) },
-        { (7, 7), new Rook(FigureColor.Black) },
-        { (1, 0), new Knight(FigureColor.White) },
-        { (6, 0), new Knight(FigureColor.White) },
-        { (1, 7), new Knight(FigureColor.Black) },
-        { (6, 7), new Knight(FigureColor.Black) },
-        { (2, 0), new Bishop(FigureColor.White) },
-        { (5, 0), new Bishop(FigureColor.White) },
-        { (2, 7), new Bishop(FigureColor.Black) },
-        { (5, 7), new Bishop(FigureColor.Black) },
-        { (4, 0), new Queen(FigureColor.White) },
-        { (4, 7), new Queen(FigureColor.Black) },
-    };
+            { (0, 0), new Rook(FigureColor.White) },
+            { (7, 0), new Rook(FigureColor.White) },
+            { (0, 7), new Rook(FigureColor.Black) },
+            { (7, 7), new Rook(FigureColor.Black) },
+            { (1, 0), new Knight(FigureColor.White) },
+            { (6, 0), new Knight(FigureColor.White) },
+            { (1, 7), new Knight(FigureColor.Black) },
+            { (6, 7), new Knight(FigureColor.Black) },
+            { (2, 0), new Bishop(FigureColor.White) },
+            { (5, 0), new Bishop(FigureColor.White) },
+            { (2, 7), new Bishop(FigureColor.Black) },
+            { (5, 7), new Bishop(FigureColor.Black) },
+            { (4, 0), new Queen(FigureColor.White) },
+            { (4, 7), new Queen(FigureColor.Black) },
+        };
+        private int currentMove = 0;
         private readonly Dictionary<(int, int), Cell> cells = new Dictionary<(int, int), Cell>();
 
         public Board()
@@ -63,19 +63,21 @@ namespace XXL.Chess
 
         public List<(int, int)> GetLegalMoves((int, int) coords)
         {
-            return GetCell(coords).GetFigureLegalMoves();
+            return GetCell(coords).GetFigureLegalMoves(currentMove);
         }
 
         public void MoveFigure((int, int) currentCoords, (int, int) nextCoords)
         {
             Cell currentCell = GetCell(currentCoords);
             Cell nextCell = GetCell(nextCoords);
-            if (!currentCell.GetFigureLegalMoves().Contains(nextCoords))
+            if (!currentCell.GetFigureLegalMoves(currentMove).Contains(nextCoords))
             {
                 throw new Exception("The figure can't move to the provided coordinates");
             }
+            currentCell.Figure.OnBeforeMove(currentCell, nextCell, currentMove);
             nextCell.Figure = currentCell.Figure;
             currentCell.Figure = null;
+            currentMove++;
         }
 
         public Dictionary<(int, int), string> GetFigurePositions()

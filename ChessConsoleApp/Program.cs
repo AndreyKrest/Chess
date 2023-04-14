@@ -15,6 +15,12 @@ class Program
         Program.DrawBoard(game);
         game.MakeMove((1, 3), (1, 4));
         Program.DrawBoard(game);
+        game.MakeMove((0, 6), (0, 4));
+        Program.DrawBoard(game);
+        game.MakeMove((1, 4), (0, 5));
+        Program.DrawBoard(game);
+        game.MakeMove((1, 6), (0, 5));
+        Program.DrawBoard(game);
 
 
     }
