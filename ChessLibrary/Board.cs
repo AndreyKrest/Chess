@@ -80,6 +80,11 @@ namespace XXL.Chess
             currentMove++;
         }
 
+        public Figure GetFigure((int, int) coords)
+        {
+            return GetCell(coords).Figure;
+        }
+
         public Dictionary<(int, int), string> GetFigurePositions()
         {
             return cells.Where((item) => item.Value.Figure != null).Select((item) =>

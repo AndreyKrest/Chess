@@ -4,6 +4,7 @@ namespace XXL.Chess
 {
     abstract class Figure
     {
+        public Player Owner { get; } = Player.White;
         public FigureColor Color { get; } = FigureColor.White;
         public string ShortColor { get; } = "W";
         public FigureConsoleRepresentation FCR { get; }
@@ -11,6 +12,7 @@ namespace XXL.Chess
 
         protected Figure(FigureColor color, FigureConsoleRepresentation fcr)
         {
+            Owner = color == FigureColor.White ? Player.White : Player.Black;
             Color = color;
             ShortColor = color == FigureColor.White ? "W" : "B";
             FCR = fcr;
