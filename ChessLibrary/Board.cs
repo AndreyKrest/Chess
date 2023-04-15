@@ -131,18 +131,40 @@ namespace XXL.Chess
 
         public string DrawBoard()
         {
-            string result = new string('—', 41) + "\n";
+            string horizontalLine = new string('—', 25) + "\n";
+            string result = horizontalLine;
             for (int y = 7; y >= 0; y--)
             {
                 result += "|";
                 for (int x = 0; x < 8; x++)
                 {
                     Cell cell = GetCell((x, y));
-                    result += cell.Figure == null ? "    |" : $" {cell.Figure.ShortColor}{cell.Figure.FCR} |";
+                    result += $"{GetFigureConsoleRepresentation(cell.Figure)}|";
                 }
-                result += "\n" + new string('—', 41) + "\n";
+                result += "\n" + horizontalLine;
             }
             return result;
+        }
+
+        private string GetFigureConsoleRepresentation(Figure figure)
+        {
+            if (figure == null) return "  ";
+            return (figure.ShortColor + figure.FCR) switch
+            {
+                "BK" => "\u2654 ",
+                "BQ" => "\u2655 ",
+                "BR" => "\u2656 ",
+                "BB" => "\u2657 ",
+                "BN" => "\u2658 ",
+                "BP" => "\u2659 ",
+                "WK" => "\u265A ",
+                "WQ" => "\u265B ",
+                "WR" => "\u265C ",
+                "WB" => "\u265D ",
+                "WN" => "\u265E ",
+                "WP" => "\u265F",
+                _ => " "
+            };
         }
 
         private Cell GetCell((int, int) coords)

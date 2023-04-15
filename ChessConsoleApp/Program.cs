@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using XXL.Chess;
 
 class Program
 {
     public static void Main()
     {
+        Console.OutputEncoding = Encoding.UTF8;
         Game game = new Game();
         List<(int, int)> legalMoves = game.GetLegalMoves((0, 0));
         Program.DrawBoard(game);
@@ -21,8 +23,6 @@ class Program
         Program.DrawBoard(game);
         game.MakeMove((1, 6), (0, 5));
         Program.DrawBoard(game);
-
-
     }
 
     private static void DrawBoard(Game game)
