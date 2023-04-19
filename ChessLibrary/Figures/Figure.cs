@@ -1,8 +1,9 @@
+using System;
 using System.Collections.Generic;
 
 namespace XXL.Chess
 {
-    abstract class Figure
+    public abstract class Figure
     {
         public Player Owner { get; } = Player.White;
         public FigureColor Color { get; } = FigureColor.White;
@@ -22,6 +23,16 @@ namespace XXL.Chess
         public virtual void OnBeforeMove(Cell currentCell, Cell nextCell, int currentMove)
         {
             MovesHistory.Add(currentMove, nextCell.Coordinates);
+        }
+
+        public virtual Figure TransformTo(Type transformTo)
+        {
+            throw new Exception("Figure cannot be transformed");
+        }
+
+        public virtual Type[] GetTransformationTypes()
+        {
+            return new Type[0];
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace XXL.Chess
 {
-    class Bishop : Figure
+    public class Bishop : Figure
     {
         public Bishop(FigureColor color) : base(color, FigureConsoleRepresentation.B)
         {

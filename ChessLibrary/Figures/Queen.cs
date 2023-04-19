@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace XXL.Chess
 {
-    class Queen : Figure
+    public class Queen : Figure
     {
         public Queen(FigureColor color) : base(color, FigureConsoleRepresentation.Q)
         {

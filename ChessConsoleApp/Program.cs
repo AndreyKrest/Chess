@@ -21,7 +21,13 @@ class Program
         Program.DrawBoard(game);
         game.MakeMove((1, 4), (0, 5));
         Program.DrawBoard(game);
-        game.MakeMove((1, 6), (0, 5));
+        game.MakeMove((0, 5), (1, 6));
+        Program.DrawBoard(game);
+        game.MakeMove((1, 6), (0, 7), typeof(Queen));
+        Program.DrawBoard(game);
+        game.MakeMove((0, 7), (3, 4));
+        Program.DrawBoard(game);
+        game.MakeMove((3, 4), (3, 6));
         Program.DrawBoard(game);
     }
 

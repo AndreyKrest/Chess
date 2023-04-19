@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace XXL.Chess
 {
-    class Cell
+    public class Cell
     {
         public Figure Figure { get; set; }
         public (int, int) Coordinates { get; }

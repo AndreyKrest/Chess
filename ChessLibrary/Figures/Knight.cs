@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace XXL.Chess
 {
-    class Knight : Figure
+    public class Knight : Figure
     {
         private static (int, int)[] moveVariants = { (2, 1), (2, -1), (-2, 1), (-2, -1), (1, 2), (1, -2), (-1, 2), (-1, -2) };
         public Knight(FigureColor color) : base(color, FigureConsoleRepresentation.N)

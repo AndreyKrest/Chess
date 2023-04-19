@@ -80,6 +80,18 @@ namespace XXL.Chess
             currentMove++;
         }
 
+        public void MoveFigure((int, int) currentCoords, (int, int) nextCoords, Type transformTo)
+        {
+            Cell currentCell = GetCell(currentCoords);
+            if (!currentCell.Figure.GetTransformationTypes().Contains(transformTo))
+            {
+                throw new Exception($"Cannot transform figure at {currentCoords} to type {transformTo}");
+            }
+            MoveFigure(currentCoords, nextCoords);
+            Cell nextCell = GetCell(nextCoords);
+            nextCell.Figure = nextCell.Figure.TransformTo(transformTo);
+        }
+
         public Figure GetFigure((int, int) coords)
         {
             return GetCell(coords).Figure;
@@ -90,9 +102,9 @@ namespace XXL.Chess
             return cells.Where((item) => item.Value.Figure != null).Select((item) =>
             {
                 return new KeyValuePair<(int, int), string>(
-            item.Key,
-            item.Value.Figure.ShortColor + item.Value.Figure.FCR.ToString()
-          );
+                    item.Key,
+                    item.Value.Figure.ShortColor + item.Value.Figure.FCR.ToString()
+                );
             })
             .ToDictionary((item) => item.Key, (item) => item.Value);
         }

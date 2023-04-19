@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace XXL.Chess
 {
-    class Pawn : Figure
+    public class Pawn : Figure
     {
         public Pawn(FigureColor color) : base(color, FigureConsoleRepresentation.P)
         {
@@ -73,6 +73,29 @@ namespace XXL.Chess
                 (int, int) targetCoords = (nextCell.Coordinates.Item1, currentCell.Coordinates.Item2);
                 nextCell.GetSiblingCellByGlobalCoordinates(targetCoords).Figure = null;
             }
+        }
+
+        public override Figure TransformTo(Type transformTo)
+        {
+            Figure newFigure;
+            switch (transformTo)
+            {
+                case Type a when a == typeof(Rook): newFigure = new Rook(Color); break;
+                case Type a when a == typeof(Knight): newFigure = new Knight(Color); break;
+                case Type a when a == typeof(Bishop): newFigure = new Bishop(Color); break;
+                case Type a when a == typeof(Queen): newFigure = new Queen(Color); break;
+                default: throw new Exception($"Unknown figure type was passed to transform pawn: {transformTo}");
+            }
+            foreach (KeyValuePair<int, (int, int)> move in MovesHistory)
+            {
+                newFigure.MovesHistory.Add(move.Key, move.Value);
+            }
+            return newFigure;
+        }
+
+        public override Type[] GetTransformationTypes()
+        {
+            return new Type[] { typeof(Rook), typeof(Knight), typeof(Bishop), typeof(Queen) };
         }
     }
 }

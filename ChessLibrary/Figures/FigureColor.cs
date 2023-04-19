@@ -1,8 +1,8 @@
 namespace XXL.Chess
 {
-  enum FigureColor
-  {
-    Black,
-    White,
-  }
+    public enum FigureColor
+    {
+        Black,
+        White,
+    }
 }

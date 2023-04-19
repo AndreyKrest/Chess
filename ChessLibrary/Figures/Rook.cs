@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace XXL.Chess
 {
-    class Rook : Figure
+    public class Rook : Figure
     {
         public Rook(FigureColor color) : base(color, FigureConsoleRepresentation.R)
         {

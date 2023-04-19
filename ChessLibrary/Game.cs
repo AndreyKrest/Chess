@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace XXL.Chess
@@ -24,12 +25,22 @@ namespace XXL.Chess
         public void MakeMove((int, int) currentCoords, (int, int) nextCoords)
         {
             Figure figure = Board.GetFigure(currentCoords);
+            // if (figure != null && figure.Owner != _activePlayer)
+            // {
+            //     return;
+            // }
+            Board.MoveFigure(currentCoords, nextCoords);
+            ChangeActivePlayer();
+        }
+
+        public void MakeMove((int, int) currentCoords, (int, int) nextCoords, Type transformTo)
+        {
+            Figure figure = Board.GetFigure(currentCoords);
             if (figure != null && figure.Owner != _activePlayer)
             {
                 return;
             }
-            Board.MoveFigure(currentCoords, nextCoords);
-            ChangeActivePlayer();
+            Board.MoveFigure(currentCoords, nextCoords, transformTo);
         }
 
         public Dictionary<(int, int), string> GetFigurePositions()
