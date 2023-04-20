@@ -22,6 +22,14 @@ namespace XXL.Chess
             }
             return Figure.GetLegalMoves(this, currentMove);
         }
+        public List<(int, int)> GetFigureLegalMovesForLinkCheck(int currentMove)
+        {
+            if (Figure == null)
+            {
+                throw new Exception("Can't get figure legal moves because cell is empty");
+            }
+            return Figure.GetLegalMovesForLinkCheck(this, currentMove);
+        }
         public Cell GetSiblingCellByGlobalCoordinates((int, int) coords)
         {
             Board.AssertBoundaries(coords);
@@ -33,6 +41,13 @@ namespace XXL.Chess
             }
             return Siblings[(x, y)];
         }
+        public bool IsInSiblingsByGlobalCoordinates((int, int) coords)
+        {
+            Board.AssertBoundaries(coords);
+            int x = coords.Item1 - Coordinates.Item1;
+            int y = coords.Item2 - Coordinates.Item2;
+            return x >= -1 && x <= 1 && y >= -1 && y <= 1;
+        }
 
         public Cell GetCellByGlobalCoordinatesRecursively((int, int) coords)
         {
@@ -43,11 +58,11 @@ namespace XXL.Chess
             int yOffset = coords.Item2 - Coordinates.Item2;
             int xLocalOffset = xOffset == 0 ? 0 : xOffset > 0 ? 1 : -1;
             int yLocalOffset = yOffset == 0 ? 0 : yOffset > 0 ? 1 : -1;
-            try
+            if (IsInSiblingsByGlobalCoordinates(coords))
             {
                 return GetSiblingCellByGlobalCoordinates(coords);
             }
-            catch (Exception)
+            else
             {
                 return Siblings[(xLocalOffset, yLocalOffset)].GetCellByGlobalCoordinatesRecursively(coords);
             }

@@ -26,7 +26,12 @@ namespace XXL.Chess
         }
         public abstract List<(int, int)> GetLegalMoves(Cell currentCell, int currentMove);
 
-        protected abstract void IterateOverAttackedCells(Cell currentCell, Func<Cell, bool> collect);
+        public virtual List<(int, int)> GetLegalMovesForLinkCheck(Cell currentCell, int currentMove)
+        {
+            return GetLegalMoves(currentCell, currentMove);
+        }
+
+        public abstract void IterateOverAttackedCells(Cell currentCell, Func<Cell, bool> collect);
 
         public virtual List<Figure> GetProtectedFigures(Cell currentCell)
         {
@@ -36,16 +41,34 @@ namespace XXL.Chess
                 if (nextCell.Figure != null && nextCell.Figure.Color == Color)
                 {
                     legalMoves.Add(nextCell.Figure);
-                    return false;
+                    return true;
                 }
-                return true;
+                return false;
             }
             IterateOverAttackedCells(currentCell, collectProtectedFigures);
             return legalMoves;
         }
 
+        public bool CanDefendMainAt((int, int) move, (int, int) attackerCoords, (int, int) kingCoords)
+        {
+            bool isBetween = move.Item1 >= attackerCoords.Item1 && move.Item2 >= attackerCoords.Item2
+                && move.Item1 <= kingCoords.Item1 && move.Item2 <= kingCoords.Item2
+                || move.Item1 <= attackerCoords.Item1 && move.Item2 <= attackerCoords.Item2
+                && move.Item1 >= kingCoords.Item1 && move.Item2 >= kingCoords.Item2;
+            if (!isBetween) return false;
+            return (
+                attackerCoords.Item1 * (move.Item2 - kingCoords.Item2)
+                + move.Item1 * (kingCoords.Item2 - attackerCoords.Item2)
+                + kingCoords.Item1 * (attackerCoords.Item2 - move.Item2)
+            ) == 0;
+        }
+
         public virtual void OnBeforeMove(Cell currentCell, Cell nextCell, int currentMove)
         {
+            if (MovesHistory.ContainsKey(currentMove))
+            {
+                throw new Exception($"Same figure moved twice. Last move: {currentCell.Coordinates} -> {nextCell.Coordinates}");
+            }
             MovesHistory.Add(currentMove, nextCell.Coordinates);
         }
 

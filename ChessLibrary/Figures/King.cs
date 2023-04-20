@@ -25,6 +25,16 @@ namespace XXL.Chess
                             {
                                 return cell.Siblings.ContainsValue(sibling);
                             }
+                            if (cell.Figure is Pawn)
+                            {
+                                List<(int, int)> coordsUnderAttack = new List<(int, int)>();
+                                cell.Figure.IterateOverAttackedCells(cell, nextCell =>
+                                {
+                                    coordsUnderAttack.Add(nextCell.Coordinates);
+                                    return true;
+                                });
+                                return coordsUnderAttack.Contains(sibling.Coordinates);
+                            }
                             return cell.Figure.GetLegalMoves(cell, currentMove).Contains(sibling.Coordinates);
                         });
                         return !isCellUnderAttack;
@@ -50,7 +60,28 @@ namespace XXL.Chess
                 bool collectLegalCastles(Cell nextCell)
                 {
                     bool isLastCell = nextCell.Coordinates.Item1 == 0 || nextCell.Coordinates.Item1 == 7;
-                    if (!isLastCell) return nextCell.Figure != null;
+                    if (!isLastCell)
+                    {
+                        bool isCellUnderAttack = enemyFigureCells.Any(cell =>
+                        {
+                            if (cell.Figure is King)
+                            {
+                                return cell.Siblings.ContainsValue(nextCell);
+                            }
+                            if (cell.Figure is Pawn)
+                            {
+                                List<(int, int)> coordsUnderAttack = new List<(int, int)>();
+                                cell.Figure.IterateOverAttackedCells(cell, nextCell =>
+                                {
+                                    coordsUnderAttack.Add(nextCell.Coordinates);
+                                    return true;
+                                });
+                                return coordsUnderAttack.Contains(nextCell.Coordinates);
+                            }
+                            return cell.Figure.GetLegalMoves(cell, currentMove).Contains(nextCell.Coordinates);
+                        });
+                        return nextCell.Figure != null || isCellUnderAttack;
+                    }
                     if (nextCell.Figure != null && nextCell.Figure is Rook && nextCell.Figure.MovesHistory.Keys.Count == 0)
                     {
                         int offset = nextCell.Coordinates.Item1 == 0 ? -2 : 2;
@@ -82,7 +113,7 @@ namespace XXL.Chess
             }
         }
 
-        protected override void IterateOverAttackedCells(Cell currentCell, System.Func<Cell, bool> collect)
+        public override void IterateOverAttackedCells(Cell currentCell, System.Func<Cell, bool> collect)
         {
             throw new Exception("This method should not be called");
         }
@@ -90,9 +121,9 @@ namespace XXL.Chess
         private List<Cell> getEnemyFigureCells(Cell currentCell)
         {
             List<Cell> result = new List<Cell>();
-            for (int y = 0; y < 7; y++)
+            for (int y = 0; y <= 7; y++)
             {
-                for (int x = 0; x < 7; x++)
+                for (int x = 0; x <= 7; x++)
                 {
                     (int, int) coords = (x, y);
                     Cell cell = currentCell.GetCellByGlobalCoordinatesRecursively(coords);

@@ -111,6 +111,30 @@ namespace XXL.Chess
             .ToDictionary((item) => item.Key, (item) => item.Value);
         }
 
+        public List<(int, int)> GetPlayerFiguresCoordinates(Player player)
+        {
+            return cells.Values
+                .Where(cell => cell.Figure != null && cell.Figure.Owner == player)
+                .Select(cell => cell.Coordinates)
+                .ToList();
+        }
+
+        public Dictionary<(int, int), List<(int, int)>> GetPlayerLegalMoves(Player player)
+        {
+            return cells.Values
+                .Where(cell => cell.Figure != null && cell.Figure.Owner == player)
+                .Select(cell => new KeyValuePair<(int, int), List<(int, int)>>(cell.Coordinates, cell.GetFigureLegalMoves(currentMove)))
+                .ToDictionary(pair => pair.Key, pair => pair.Value);
+        }
+
+        public Dictionary<(int, int), List<(int, int)>> GetPlayerLegalMovesForLinkCheck(Player player)
+        {
+            return cells.Values
+                .Where(cell => cell.Figure != null && cell.Figure.Owner == player)
+                .Select(cell => new KeyValuePair<(int, int), List<(int, int)>>(cell.Coordinates, cell.GetFigureLegalMovesForLinkCheck(currentMove)))
+                .ToDictionary(pair => pair.Key, pair => pair.Value);
+        }
+
         private void initCells()
         {
             for (int x = 0; x < 8; x++)

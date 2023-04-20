@@ -21,7 +21,7 @@ namespace XXL.Chess
             return legalMoves;
         }
 
-        protected override void IterateOverAttackedCells(Cell currentCell, Func<Cell, bool> collect)
+        public override void IterateOverAttackedCells(Cell currentCell, Func<Cell, bool> collect)
         {
             foreach ((int, int) moveVariant in moveVariants)
             {
