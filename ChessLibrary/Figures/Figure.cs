@@ -9,6 +9,7 @@ namespace XXL.Chess
         public FigureColor Color { get; } = FigureColor.White;
         public string ShortColor { get; } = "W";
         public FigureConsoleRepresentation FCR { get; }
+        public bool IsMain { get; } = false;
         public Dictionary<int, (int, int)> MovesHistory { get; } = new Dictionary<int, (int, int)>();
 
         protected Figure(FigureColor color, FigureConsoleRepresentation fcr)
@@ -18,7 +19,30 @@ namespace XXL.Chess
             ShortColor = color == FigureColor.White ? "W" : "B";
             FCR = fcr;
         }
-        abstract public List<(int, int)> GetLegalMoves(Cell currentCell, int currentMove);
+
+        protected Figure(FigureColor color, FigureConsoleRepresentation fcr, bool isMain) : this(color, fcr)
+        {
+            IsMain = isMain;
+        }
+        public abstract List<(int, int)> GetLegalMoves(Cell currentCell, int currentMove);
+
+        protected abstract void IterateOverAttackedCells(Cell currentCell, Func<Cell, bool> collect);
+
+        public virtual List<Figure> GetProtectedFigures(Cell currentCell)
+        {
+            List<Figure> legalMoves = new List<Figure>();
+            bool collectProtectedFigures(Cell nextCell)
+            {
+                if (nextCell.Figure != null && nextCell.Figure.Color == Color)
+                {
+                    legalMoves.Add(nextCell.Figure);
+                    return false;
+                }
+                return true;
+            }
+            IterateOverAttackedCells(currentCell, collectProtectedFigures);
+            return legalMoves;
+        }
 
         public virtual void OnBeforeMove(Cell currentCell, Cell nextCell, int currentMove)
         {

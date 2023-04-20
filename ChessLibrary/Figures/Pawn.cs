@@ -61,8 +61,21 @@ namespace XXL.Chess
                 currentCell.IterateDownLeft(collectLegalCaptures);
             }
 
-
             return legalMoves;
+        }
+
+        protected override void IterateOverAttackedCells(Cell currentCell, Func<Cell, bool> collect)
+        {
+            if (this.Color == FigureColor.White)
+            {
+                currentCell.IterateUpRight(collect);
+                currentCell.IterateUpLeft(collect);
+            }
+            else
+            {
+                currentCell.IterateDownRight(collect);
+                currentCell.IterateDownLeft(collect);
+            }
         }
 
         public override void OnBeforeMove(Cell currentCell, Cell nextCell, int currentMove)

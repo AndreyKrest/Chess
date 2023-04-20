@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace XXL.Chess
@@ -12,6 +13,16 @@ namespace XXL.Chess
         public override List<(int, int)> GetLegalMoves(Cell currentCell, int currentMove)
         {
             List<(int, int)> legalMoves = new List<(int, int)>();
+            IterateOverAttackedCells(currentCell, (nextCell) =>
+            {
+                legalMoves.Add(nextCell.Coordinates);
+                return true;
+            });
+            return legalMoves;
+        }
+
+        protected override void IterateOverAttackedCells(Cell currentCell, Func<Cell, bool> collect)
+        {
             foreach ((int, int) moveVariant in moveVariants)
             {
                 (int, int) nextCoords = (moveVariant.Item1 + currentCell.Coordinates.Item1, moveVariant.Item2 + currentCell.Coordinates.Item2);
@@ -24,9 +35,8 @@ namespace XXL.Chess
                 {
                     continue;
                 }
-                legalMoves.Add(nextCoords);
+                collect(nextCell);
             }
-            return legalMoves;
         }
     }
 }

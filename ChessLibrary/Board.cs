@@ -36,8 +36,10 @@ namespace XXL.Chess
             { (5, 0), new Bishop(FigureColor.White) },
             { (2, 7), new Bishop(FigureColor.Black) },
             { (5, 7), new Bishop(FigureColor.Black) },
-            { (4, 0), new Queen(FigureColor.White) },
-            { (4, 7), new Queen(FigureColor.Black) },
+            { (3, 0), new Queen(FigureColor.White) },
+            { (3, 7), new Queen(FigureColor.Black) },
+            { (4, 0), new King(FigureColor.White) },
+            { (4, 7), new King(FigureColor.Black) },
         };
         private int currentMove = 0;
         private readonly Dictionary<(int, int), Cell> cells = new Dictionary<(int, int), Cell>();

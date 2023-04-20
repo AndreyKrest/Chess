@@ -25,10 +25,10 @@ namespace XXL.Chess
         public void MakeMove((int, int) currentCoords, (int, int) nextCoords)
         {
             Figure figure = Board.GetFigure(currentCoords);
-            // if (figure != null && figure.Owner != _activePlayer)
-            // {
-            //     return;
-            // }
+            if (figure != null && figure.Owner != _activePlayer)
+            {
+                return;
+            }
             Board.MoveFigure(currentCoords, nextCoords);
             ChangeActivePlayer();
         }
@@ -41,6 +41,7 @@ namespace XXL.Chess
                 return;
             }
             Board.MoveFigure(currentCoords, nextCoords, transformTo);
+            ChangeActivePlayer();
         }
 
         public Dictionary<(int, int), string> GetFigurePositions()

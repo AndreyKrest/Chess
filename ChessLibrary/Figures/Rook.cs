@@ -25,11 +25,16 @@ namespace XXL.Chess
                 legalMoves.Add(nextCell.Coordinates);
                 return false;
             }
-            currentCell.IterateUp(collectLegalMoves);
-            currentCell.IterateDown(collectLegalMoves);
-            currentCell.IterateRight(collectLegalMoves);
-            currentCell.IterateLeft(collectLegalMoves);
+            IterateOverAttackedCells(currentCell, collectLegalMoves);
             return legalMoves;
+        }
+
+        protected override void IterateOverAttackedCells(Cell currentCell, Func<Cell, bool> collect)
+        {
+            currentCell.IterateUp(collect);
+            currentCell.IterateDown(collect);
+            currentCell.IterateRight(collect);
+            currentCell.IterateLeft(collect);
         }
     }
 }

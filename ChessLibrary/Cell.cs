@@ -37,6 +37,8 @@ namespace XXL.Chess
         public Cell GetCellByGlobalCoordinatesRecursively((int, int) coords)
         {
             Board.AssertBoundaries(coords);
+            if (coords == Coordinates) return this;
+
             int xOffset = coords.Item1 - Coordinates.Item1;
             int yOffset = coords.Item2 - Coordinates.Item2;
             int xLocalOffset = xOffset == 0 ? 0 : xOffset > 0 ? 1 : -1;
